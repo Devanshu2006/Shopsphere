@@ -1,0 +1,14 @@
+shopsphere:
+  target: dev
+
+  outputs:
+    dev:
+      type: postgres
+      host: 127.0.0.1
+      port: 5432
+      user: shopsphere
+      password: shopsphere
+      dbname: shopsphere
+      schema: analytics
+      threads: 4
+      

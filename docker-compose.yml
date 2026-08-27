@@ -1,0 +1,32 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: shopsphere_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: shopsphere
+      POSTGRES_PASSWORD: shopsphere
+      POSTGRES_DB: shopsphere
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/01_init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U shopsphere"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  metabase:
+    image: metabase/metabase:latest
+    container_name: shopsphere_metabase
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  pgdata:
